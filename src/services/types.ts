@@ -7,5 +7,5 @@ export type config = {
         database: string,
         password: string
     },
-    pool: { min: 2, max: 10 }
+    pool: { min: 2, max: 10 } 
 }
