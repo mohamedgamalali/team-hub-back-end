@@ -10,7 +10,7 @@ import bodyParser from 'body-parser';
 //multer
 const fileStorage = multer.diskStorage({
     destination: (req: any, file: any, cb: CallableFunction) => {
-        cb(null, 'images');
+        cb(null, 'uploads');
     },
     filename: (req: any, file: any, cb: CallableFunction) => {
         cb(null, new Date().toISOString() + '-' + file.originalname);
