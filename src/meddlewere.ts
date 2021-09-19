@@ -5,7 +5,7 @@ import path from 'path'
 import fs from 'fs';
 import passAuth from './services/passport';
 // import response from './helpers/Response';
-import swaggerUi from 'swagger-ui-express'
+// import swaggerUi from 'swagger-ui-express'
 import bodyParser from 'body-parser';
 //multer
 const fileStorage = multer.diskStorage({
@@ -79,7 +79,7 @@ export default (app: Application) => {
     app.use(`${BASE_URL}/user/auth`, require(`./routes/user/auth`));
     app.use(`${BASE_URL}/user/kudos`, require(`./routes/user/kudos`));
 
-    app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('./swagger/swagger.json')))
+    // app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('./swagger/swagger.json')))
 
 
     //error handler
