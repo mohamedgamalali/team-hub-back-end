@@ -1,0 +1,178 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "team hub API",
+        "version": "1.0.0",
+        "title": "team hub"
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/user/auth/login": {
+            "post": {
+                "summary": "user login with google",
+                "description": "login with access token and workspace field",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "body",
+                        "description": "google access token that gained profile, email, image and id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workspace",
+                        "in": "body",
+                        "description": "workspace name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/loginRes"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthrized",
+                        "schema": {
+                            "$ref": "#/definitions/unauthrized"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Faild",
+                        "schema": {
+                            "$ref": "#/definitions/ValidationFaild"
+                        }
+                    },"404": {
+                        "description": "not found",
+                        "schema": {
+                            "$ref": "#/definitions/NotFound"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "loginRes": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties":{
+                        "token":{
+                            "type":"string"
+                        },
+                        "expiresIn":{
+                            "type":"integer"
+                        },
+                        "email":{
+                            "type":"string"
+                        }
+                    }
+                }
+            }
+        },
+        "unauthrized": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":2
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "paymentRequired": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":3
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Forbidden": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":4
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "NotFound": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":5
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Conflict": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":8
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },"UnsupportedMediaType": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":6
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },"ValidationFaild": {
+            "type": "object",
+            "properties": {
+                "state": {
+                    "type": "integer",
+                    "default":7
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
