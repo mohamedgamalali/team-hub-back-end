@@ -46,7 +46,7 @@ export async function workspace(req: any, res: Response, next: NextFunction) {
         const workspace = await DB.db.select('*').from('tenants').where('id', '=', workspaceId)
 
         if (workspace.length == 0) {
-            return response.NotFound(res, 'workspace nor found')
+            return response.NotFound(res, 'workspace not found')
         }
         const connection: Knex = Connection.getTanantConnection(workspace[0].id);
 

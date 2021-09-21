@@ -6,6 +6,7 @@ import passwordGenerator from 'generate-password';
 import slugify from 'slugify';
 import { v4 as uuid } from 'uuid';
 import { config as conf } from 'dotenv';
+import httpError from '../helpers/httpError';
 conf();
 export class Connection {
     private static Tenants: any[] = [];
@@ -147,11 +148,22 @@ export class Services {
 
     static async createTenant(name: string) {
         try {
+            const tenantName = slugify(name.toLowerCase(), '_');
+
+            const isTenant = await dbConfig.db.select('id').from('tenants').where({
+                db_name:tenantName
+            });
+
+            if(isTenant.length){
+                const err = new httpError(409, 8, 'workspace name already taken');
+                throw err;
+            }
+
+
             const password = passwordGenerator.generate({
                 length: 12,
                 numbers: true
             });
-            const tenantName = slugify(name.toLowerCase(), '_');
 
             const newTenant = await dbConfig.db('tenants').insert({
                 id: uuid(),
@@ -159,11 +171,13 @@ export class Services {
                 db_username: tenantName,
                 db_password: password
             }).returning('*');
-            console.log(newTenant);
+
 
             await this.up({ tenantName: newTenant[0].db_name, id: newTenant[0].id, password: newTenant[0].db_password })
 
             await this.createTables(newTenant[0].id)
+
+            return newTenant[0].id ;
 
         } catch (err) {
             throw err;
@@ -180,11 +194,12 @@ export class Services {
                 await connection.schema.createTable('users', function (table: any) {
                     table.uuid('id').primary().unique().notNullable();
                     table.string('name').notNullable();
-                    table.string('google_id');
+                    table.string('google_id').unique();
                     table.string('image');
                     table.string('email').notNullable().unique();
                     table.boolean('blocked').notNullable().defaultTo(false);
                     table.string('jop_title')
+                    table.string('role').defaultTo('user')
                     table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
                     table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
                 });
