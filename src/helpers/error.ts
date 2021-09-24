@@ -9,6 +9,8 @@ export default function(error:httpError, req:Request, res:Response, next:NextFun
     const state:number   = error.state   || 0;
     const message:string = error.message || 'somesing went wrong';
 
+    console.log(message);
+    
     if(status===500){
         response.serverError(res, message);
     }else{
