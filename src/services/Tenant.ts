@@ -199,7 +199,10 @@ export class Services {
                     table.string('email').notNullable().unique();
                     table.boolean('blocked').notNullable().defaultTo(false);
                     table.string('jop_title')
+                    table.string('phone')
                     table.string('role').defaultTo('user')
+                    table.boolean('info_check').defaultTo(false)
+                    table.timestamp('birthday', { precision: 6 });
                     table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
                     table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
                 });

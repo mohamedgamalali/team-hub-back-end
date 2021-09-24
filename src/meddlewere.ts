@@ -76,11 +76,15 @@ export default (app: Application) => {
         
     // })
 
+    //user
     app.use(`${BASE_URL}/user/auth`, require(`./routes/user/auth`));
     app.use(`${BASE_URL}/user/kudos`, require(`./routes/user/kudos`));
+    app.use(`${BASE_URL}/user/profile`, require(`./routes/user/profile`));
+
+    //admin
     app.use(`${BASE_URL}/admin/auth`, require(`./routes/admin/auth`));
 
-    // app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('./swagger/swagger.json')))
+
 
 
     //error handler

@@ -27,6 +27,7 @@ export default class Auth {
 
     static async generateJWT(user: any, privateKye: string) {
 
+        
         return {
 
             token: sign(
@@ -42,13 +43,13 @@ export default class Auth {
             email: user.email,
             image: user.image,
             name: user.name,
-            jop_title: user.jop_title
+            jop_title: user.jop_title,
+            info_check:user.info_check
         };
     }
 
     static async generateGeneralJWT(profile: any, privateKye: string) {
-        console.log(profile);
-
+        
         return {
 
             token: sign(
@@ -189,7 +190,6 @@ export default class Auth {
                 throw err;
             }
 
-            console.log(user);
 
             let image = user[0].image ;
 
@@ -210,7 +210,8 @@ export default class Auth {
                 connection: workspace[0].id,
                 image: image,
                 name: user[0].name,
-                jop_title: user[0].jop_title
+                jop_title: user[0].jop_title,
+                info_check:user[0].info_check
             };
 
             return req.user;
@@ -287,7 +288,8 @@ export default class Auth {
 
 
             const connection: Knex = Connection.getTanantConnection(decodedToken.workspaceId);
-
+           
+            
             if (!connection) {
                 const error = new httpError(404, 2, 'work space not found');
                 throw error;
@@ -306,8 +308,6 @@ export default class Auth {
                 const error = new httpError(403, 4, 'user blocked');
                 throw error;
             }
-
-            console.log(decodedToken.id);
 
 
             req.user = decodedToken.id;
@@ -363,10 +363,11 @@ export default class Auth {
             const userToken: Token = await this.generateJWT({
                 email: thisUser[0].email,
                 id: thisUser[0].id,
-                workspaceId: tenantId,
+                connection: tenantId,
                 image: thisUser[0].image,
                 name: thisUser[0].name,
-                jop_title: thisUser[0].jop_title
+                jop_title: thisUser[0].jop_title,
+                info_check:thisUser[0].info_check
             }, <string>process.env.USER_PRIVATE_KEY)
 
 
