@@ -3,7 +3,7 @@ import httpError from './httpError'
 import response from './Response'
  
 export default function(error:httpError, req:Request, res:Response, next:NextFunction){
-    console.debug(error);
+    // console.debug(error);
     
     const status:number  = error.status  || 500;
     const state:number   = error.state   || 0;
