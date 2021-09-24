@@ -320,6 +320,58 @@ export default class Auth {
     }
 
 
+    static async IsAuthrizedAdmin(req: IGetUserAuthInfoRequest, res: Response, next: NextFunction, q: boolean = false) {
+        try {
+            //get token
+
+            let token: string;
+            if (q) {
+                token = await this.getTokenQuery(<Request>req);
+            } else {
+                token = await this.getToken(<Request>req);
+            }
+
+
+            //decode token
+            const decodedToken: Token = await this.verifyToken(token, <string>process.env.USER_PRIVATE_KEY);
+
+
+            const connection: Knex = Connection.getTanantConnection(decodedToken.workspaceId);
+           
+            
+            if (!connection) {
+                const error = new httpError(404, 2, 'work space not found');
+                throw error;
+            }
+            //check for admin
+            const user = await connection.select('*').from('users').where('id', '=', decodedToken.id)
+
+            if (user.length == 0) {
+                //regular error throw
+                const error = new httpError(404, 2, 'user not found');
+                throw error;
+            }
+
+            if (user[0].blocked) {
+                //regular error throw
+                const error = new httpError(403, 4, 'user blocked');
+                throw error;
+            }
+
+            if(user[0].role != 'admin'){
+                const error = new httpError(403, 4, 'not an admin');
+                throw error; 
+            }
+
+            req.user = decodedToken.id;
+            req.DB = connection;
+
+            return next();
+        } catch (err) {
+            next(err);
+        }
+    }
+    
     static async signupWorkspaec(token: string, email: string, workspace: string) {
         try {
 

@@ -92,6 +92,7 @@ export default (app: Application) => {
 
     //admin
     app.use(`${BASE_URL}/admin/auth`, require(`./routes/admin/auth`));
+    app.use(`${BASE_URL}/admin/news`, require(`./routes/admin/news`));
 
 
 
