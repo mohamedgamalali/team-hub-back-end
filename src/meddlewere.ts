@@ -57,15 +57,15 @@ export default (app: Application) => {
     });
 
 
-    app.use((req: Request, res: Response, next: NextFunction) => {
+    // app.use((req: Request, res: Response, next: NextFunction) => {
 
-        if (req.method == 'OPTIONS') {
-            return res.status(200).json({})
-        }
+    //     if (req.method == 'OPTIONS') {
+    //         return res.status(200).json({})
+    //     }
 
-        next() ;
+    //     next() ;
 
-    })
+    // })
 
 
     // fs.readdir(path.join(__dirname, 'routes'), (err, files) => {
