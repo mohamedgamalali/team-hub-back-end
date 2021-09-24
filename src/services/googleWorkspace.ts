@@ -9,14 +9,20 @@ export default class WorkSpace {
             const domain = email.slice(email.indexOf('@') + 1, email.length);
 
 
+            let response ;
 
-
-
-            const response = await axios.get(`https://admin.googleapis.com/admin/directory/v1/users?domain=${domain}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
+            try{
+                response = await axios.get(`https://admin.googleapis.com/admin/directory/v1/users?domain=${domain}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            }catch(err){
+                
+                throw err
+                
+            }
+            
 
             let users: object[] = [];
             let isWorker = false;
@@ -58,6 +64,8 @@ export default class WorkSpace {
 
 
         } catch (err) {
+            
+            
             throw err;
         }
     }

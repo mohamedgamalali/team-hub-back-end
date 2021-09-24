@@ -261,9 +261,23 @@ export class Services {
                 table.string('content').notNullable();
                 table.specificType('images', 'text ARRAY');
 
-
             }));
 
+            await connection.schema.createTable('news', ((table: any) => {
+                table
+                    .uuid("user")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users")
+                    .onDelete("CASCADE");
+                table.uuid('id').primary().unique().notNullable();
+                table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table.string('content').notNullable();
+                table.string('image');
+
+
+            }));
 
         } catch (err) {
             throw err;

@@ -47,7 +47,7 @@ export default (app: Application) => {
 
     // app.use('/uploads', express.static(path.join(__dirname, '../', 'uploads')));
 
-    
+
     //headers meddlewere
     app.use((req: Request, res: Response, next: NextFunction) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -57,6 +57,15 @@ export default (app: Application) => {
     });
 
 
+    app.use((req: Request, res: Response, next: NextFunction) => {
+
+        if (req.method == 'OPTIONS') {
+            return res.status(200).json({})
+        }
+
+        next() ;
+
+    })
 
 
     // fs.readdir(path.join(__dirname, 'routes'), (err, files) => {
@@ -73,7 +82,7 @@ export default (app: Application) => {
     //             })
     //         })
     //     }
-        
+
     // })
 
     //user
