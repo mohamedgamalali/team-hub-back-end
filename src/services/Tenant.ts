@@ -113,8 +113,15 @@ export class Connection {
             const tenents = await dbConfig.db.select('db_name', 'id').from('tenants')
 
             for (let ten of tenents) {
-                await dbConfig.db.raw(`DROP DATABASE IF EXISTS ${ten.db_name};`)
-                await dbConfig.db.raw(`DROP ROLE ${ten.db_name};`)
+                try {
+                    await dbConfig.db.raw(`DROP DATABASE IF EXISTS ${ten.db_name};`)
+                    await dbConfig.db.raw(`DROP ROLE ${ten.db_name};`)
+                } catch (err) {
+                    console.log(err);
+                    continue;
+
+                }
+
 
             }
             await dbConfig.db('tenants').del();
@@ -151,10 +158,10 @@ export class Services {
             const tenantName = slugify(name.toLowerCase(), '_');
 
             const isTenant = await dbConfig.db.select('id').from('tenants').where({
-                db_name:tenantName
+                db_name: tenantName
             });
 
-            if(isTenant.length){
+            if (isTenant.length) {
                 const err = new httpError(409, 8, 'workspace name already taken');
                 throw err;
             }
@@ -177,7 +184,7 @@ export class Services {
 
             await this.createTables(newTenant[0].id)
 
-            return newTenant[0].id ;
+            return newTenant[0].id;
 
         } catch (err) {
             throw err;
@@ -275,8 +282,41 @@ export class Services {
                 table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
                 table.string('content').notNullable();
                 table.string('image');
+            }));
 
+            await connection.schema.createTable('slides', ((table: any) => {
+                table.uuid('id').primary().unique().notNullable();
+                table.string('name').notNullable();
+                table.boolean('hide').defaultTo(false);
+                table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table
+                    .uuid("user")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users")
+                    .onDelete("CASCADE");
+            }));
 
+            await connection.schema.createTable('slides-files', ((table: any) => {
+                table.uuid('id').primary().unique().notNullable();
+                table.string('description').notNullable();
+                table.string('fileLink').notNullable();
+                table.boolean('hide').defaultTo(false);
+                table
+                    .uuid("user")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users")
+                    .onDelete("CASCADE");
+                table
+                    .uuid("slide")
+                    .notNullable()
+                    .references("id")
+                    .inTable("slides")
+                    .onDelete("CASCADE");
+                table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
             }));
 
         } catch (err) {

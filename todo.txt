@@ -1,0 +1,2 @@
+1 - templates > slides create category
+2 - create file aassigned to the category 
