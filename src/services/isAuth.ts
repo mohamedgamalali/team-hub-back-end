@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken'
+import { sign, verify,  } from 'jsonwebtoken'
 import { Request, Response, NextFunction, response } from 'express';
 import httpError from '../helpers/httpError'
 import DB from '../config/DB'
@@ -27,7 +27,7 @@ export default class Auth {
 
     static async generateJWT(user: any, privateKye: string) {
 
-        
+
         return {
 
             token: sign(
@@ -37,19 +37,25 @@ export default class Auth {
                     workspaceId: user.connection
                 },
                 privateKye,
-                { expiresIn: '3h' }
+                { expiresIn: '15m' }
             ),
-            expiresIn: 10000000,
+            refresh_token: sign({
+                email: user.email,
+                id: user.id.toString(),
+                workspaceId: user.connection,
+                updated_at:user.updated_at
+            }, <string>process.env.USER_REFRESH_TOKEN),
+            expiresIn: 800000,
             email: user.email,
             image: user.image,
             name: user.name,
             jop_title: user.jop_title,
-            info_check:user.info_check
+            info_check: user.info_check
         };
     }
 
     static async generateGeneralJWT(profile: any, privateKye: string) {
-        
+
         return {
 
             token: sign(
@@ -93,10 +99,11 @@ export default class Auth {
             }
             return decodedToken;
 
-        } catch (err) {
+        } catch (err:any) {
             //regular error throw
-            // const error = new httpError(401, 2, err.message);
-            throw err;
+            const error = new httpError(401, 2, err.message);
+            
+            throw error;
         }
 
     }
@@ -191,18 +198,18 @@ export default class Auth {
             }
 
 
-            let image = user[0].image ;
+            let image = user[0].image;
 
 
             if (!user[0].image) {
                 await connection('users').where({ google_id: profile.id, }).update({
                     image: profile._json.picture,
                 })
-                image = profile._json.picture ;
+                image = profile._json.picture;
             }
 
 
-        
+
 
             req.user = {
                 email: user[0].email,
@@ -211,7 +218,8 @@ export default class Auth {
                 image: image,
                 name: user[0].name,
                 jop_title: user[0].jop_title,
-                info_check:user[0].info_check
+                info_check: user[0].info_check,
+                updated_at:user[0].updated_at
             };
 
             return req.user;
@@ -288,8 +296,8 @@ export default class Auth {
 
 
             const connection: Knex = Connection.getTanantConnection(decodedToken.workspaceId);
-           
-            
+
+
             if (!connection) {
                 const error = new httpError(404, 2, 'work space not found');
                 throw error;
@@ -337,8 +345,8 @@ export default class Auth {
 
 
             const connection: Knex = Connection.getTanantConnection(decodedToken.workspaceId);
-           
-            
+
+
             if (!connection) {
                 const error = new httpError(404, 2, 'work space not found');
                 throw error;
@@ -358,9 +366,9 @@ export default class Auth {
                 throw error;
             }
 
-            if(user[0].role != 'admin'){
+            if (user[0].role != 'admin') {
                 const error = new httpError(403, 4, 'not an admin');
-                throw error; 
+                throw error;
             }
 
             req.user = decodedToken.id;
@@ -371,7 +379,7 @@ export default class Auth {
             next(err);
         }
     }
-    
+
     static async signupWorkspaec(token: string, email: string, workspace: string) {
         try {
 
@@ -419,7 +427,8 @@ export default class Auth {
                 image: thisUser[0].image,
                 name: thisUser[0].name,
                 jop_title: thisUser[0].jop_title,
-                info_check:thisUser[0].info_check
+                info_check: thisUser[0].info_check,
+                updated_at:thisUser[0].updated_at
             }, <string>process.env.USER_PRIVATE_KEY)
 
 

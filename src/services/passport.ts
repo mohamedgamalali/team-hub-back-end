@@ -12,9 +12,6 @@ passport.use('googleToken', new googlePlusToken({
     passReqToCallback: true
 }, async (req: Request, accessToken: any, refreshToken: any, profile: Profile, done: any) => {
     try {
-
-        // await Services.createTenant('gpogrop');
-        console.log(profile);
         
         const result = await Auth.regesterSocialMedia(profile, req);
         return done(null, result);

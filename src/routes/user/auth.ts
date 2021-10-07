@@ -7,7 +7,10 @@ import isAuth from '../../middlewere/isAuthGeneral'
 const router = Router();
 router.post('/login', passport.authenticate('googleToken', { session: false }), authController.login);
 
-// router.post('/workspace',isAuth , authController.workspace);
+router.post('/refresh_token', [
+    body('refresh_token')
+    .not().isEmpty()
+], authController.regreshToken)
 
 
 
