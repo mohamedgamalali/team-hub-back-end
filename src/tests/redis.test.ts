@@ -1,4 +1,4 @@
-import Redis from '../src/services/redis';
+import Redis from '../services/redis';
 
 describe('redis test', ()=>{
     test('radis object', async()=>{
