@@ -319,6 +319,21 @@ export class Services {
                 table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
             }));
 
+            await connection.schema.createTable('signatures', ((table: any) => {
+                table.uuid('id').primary().unique().notNullable();
+                table.string('description').notNullable();
+                table.string('fileLink').notNullable();
+                table.boolean('hide').defaultTo(false);
+                table
+                    .uuid("user")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users")
+                    .onDelete("CASCADE");
+                table.timestamp('created_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+                table.timestamp('updated_at', { precision: 6 }).defaultTo(connection.fn.now(6));
+            }));
+
         } catch (err) {
             throw err;
         }

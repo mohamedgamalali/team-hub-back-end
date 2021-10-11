@@ -10,6 +10,12 @@ router.put('/slide/category',[
     .not().isEmpty()
 ], isAuth, newsControllers.createSlide);
 
+
+router.delete('/slide/category',[
+    body('id')
+    .not().isEmpty(),
+], isAuth, newsControllers.deleteSlide);
+
 router.put('/slide/file',[
     body('description')
     .not().isEmpty(),
@@ -20,6 +26,25 @@ router.put('/slide/file',[
     .not().isEmpty()
     .isUUID()
 ], isAuth, newsControllers.addSlideFile);
+
+router.delete('/slide/file',[
+    body('id')
+    .not().isEmpty(),
+], isAuth, newsControllers.deleteSlidesFile);
+
+router.put('/signatures',[
+    body('description')
+    .not().isEmpty(),
+    body('fileLink')
+    .not().isEmpty().isURL()
+    .withMessage('must be valid url'),
+], isAuth, newsControllers.addSignature);
+
+
+router.delete('/signatures',[
+    body('id')
+    .not().isEmpty(),
+], isAuth, newsControllers.deleteSignature);
 
 
 
