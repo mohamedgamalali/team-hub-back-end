@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p .",
-    "test": "jest . --watch"
+    "build": "tsc -p ."
   },
   "author": "",
   "license": "ISC",
