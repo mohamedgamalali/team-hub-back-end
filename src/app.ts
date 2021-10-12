@@ -16,7 +16,7 @@ Connection.bootstrap().then((result) => {
     app.listen(port, () => {
         console.log(`server running on port: ${port}`);
     })
-    // Connection.deleteAll();
+    // Connection.deleteAll(); 
     // Services.createTenant('test')
 }).catch(err => {
     console.log(err);
