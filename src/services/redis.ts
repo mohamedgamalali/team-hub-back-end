@@ -5,11 +5,7 @@ export default class radisServis {
     client: RedisClient;
 
     constructor() {
-        this.client = createClient({
-            host: '127.0.0.1',
-            db: 0,
-            port: 6379
-        });
+        this.client = createClient();
     }
     async insert(key: string, data: object) {
         try {
