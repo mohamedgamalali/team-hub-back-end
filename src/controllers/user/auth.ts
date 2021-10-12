@@ -8,7 +8,7 @@ import DB from '../../config/DB';
 import { Knex } from 'knex';
 
 import { verify, sign } from 'jsonwebtoken';
-import  Redis from '../../services/redis';
+// import  Redis from '../../services/redis';
 
 
 export async function login(req: Request, res: Response, next: NextFunction) {
@@ -76,15 +76,15 @@ export async function regreshToken(req: any, res: Response, next: NextFunction) 
             return response.unauthorized(res, 'expided refresh_token')
         }
 
-        const redis = new Redis();
+        // const redis = new Redis();
         
-        const fetchToken = await redis.find(`${decodedToken.workspaceId}-${decodedToken.id}`, {
-            refresh_token:refresh_token
-        });
+        // const fetchToken = await redis.find(`${decodedToken.workspaceId}-${decodedToken.id}`, {
+        //     refresh_token:refresh_token
+        // });
 
-        if(!fetchToken.length){
-            return response.unauthorized(res, 'expided refresh_token "not valid anymore"')
-        }
+        // if(!fetchToken.length){
+        //     return response.unauthorized(res, 'expided refresh_token "not valid anymore"')
+        // }
         
 
         const token: Token = sign({
