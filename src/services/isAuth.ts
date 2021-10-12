@@ -10,7 +10,7 @@ import { config } from 'dotenv';
 config();
 import slugify from 'slugify';
 import worSpace from './googleWorkspace';
-// import Redis from './redis'
+import Redis from './redis'
 //create new object in request
 export interface IGetUserAuthInfoRequest extends Request {
     userId: string,
@@ -27,7 +27,7 @@ export default class Auth {
 
     static async generateJWT(user: any, privateKye: string) {
 
-        // const redis = new Redis();
+        const redis = new Redis();
 
         const refresh_token = sign({
             email: user.email,
@@ -37,9 +37,9 @@ export default class Auth {
         }, <string>process.env.USER_REFRESH_TOKEN)
 
         //the inbdert key will be tenant id concatenated to the user id
-        // await redis.insert(`${user.connection}-${user.id.toString()}`, {
-        //     refresh_token:refresh_token
-        // });
+        await redis.insert(`${user.connection}-${user.id.toString()}`, {
+            refresh_token:refresh_token
+        });
 
 
         return {

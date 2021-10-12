@@ -5,7 +5,11 @@ export default class radisServis {
     client: RedisClient;
 
     constructor() {
-        this.client = createClient();
+        this.client = createClient({
+            host:'redis-16314.c82.us-east-1-2.ec2.cloud.redislabs.com',
+            port:16314,
+            password:'q2egC9uA80toqPS3s8HWeZ0U6r8d3RCZ'
+        });
     }
     async insert(key: string, data: object) {
         try {
